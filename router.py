@@ -1,6 +1,6 @@
 #requirements python 3.6+?
 # pip install requests, selenium + chromedriver(version=equal to chrome version) download and put in path dir
-import requests, time, json, random, re
+import requests, time, json, random, re, configparser, ast
 #from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -8,13 +8,26 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver import Chrome
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+#config load
+config = configparser.ConfigParser()
+config.read('config.ini', encoding='utf-8')
+
 #Adreshu saraksts // pirmais ieraksts buus saakumpunkts (un beigu punkts round-tripam)
-AdressArray = ["Bauskas iela 88","Ziepniekkalna iela 20","Brīvības iela 15","Pārslas iela 3","Bērzu iela 2-6, Garkalne","Kuģu iela 5","Artilērijas iela 42","Pērnavas iela 23","Brīvības gatve 274-276","Sila iela 6-8, Babīte"]
+AdressArray = ast.literal_eval(config.get('Settings', 'AdressArray'))
 #Settingi
-triptype = 1 #1 for roundtrip / 2 for A-Z trip
-StopCount = 3 #cik adreses randomaa izveeleesies no pilnaa adreshu saraksta, lai veiktu apreekinus
-iteracijas = 3 #cik pilnus ciklus skripts veiks (cik reizes veers valjaa chrome un pildiis darbiibas)
-visibility = 0 # 0 = process notiek backgroundaa, jebkura cita vertiba = redzams logs un darbiiba
+triptype = config.getint('Settings', 'triptype') #1 for roundtrip / 2 for A-Z trip
+StopCount = config.getint('Settings', 'StopCount') #cik adreses randomaa izveeleesies no pilnaa adreshu saraksta, lai veiktu apreekinus
+iteracijas = config.getint('Settings', 'iteracijas') #cik pilnus ciklus skripts veiks (cik reizes veers valjaa chrome un pildiis darbiibas)
+visibility = config.getint('Settings', 'visibility') # 0 = process notiek backgroundaa, jebkura cita vertiba = redzams logs un darbiiba
+path = config.get('Settings', 'path')
+##Adreshu saraksts // pirmais ieraksts buus saakumpunkts (un beigu punkts round-tripam)
+#AdressArray = ["Bauskas iela 88","Ziepniekkalna iela 20","Brīvības iela 15","Pārslas iela 3","Bērzu iela 2-6, Garkalne","Kuģu iela 5","Artilērijas iela 42","Pērnavas iela 23","Brīvības gatve 274-276","Sila iela 6-8, Babīte"]
+##Settingi
+#triptype = 1 #1 for roundtrip / 2 for A-Z trip
+#StopCount = 3 #cik adreses randomaa izveeleesies no pilnaa adreshu saraksta, lai veiktu apreekinus
+#iteracijas = 3 #cik pilnus ciklus skripts veiks (cik reizes veers valjaa chrome un pildiis darbiibas)
+#visibility = 0 # 0 = process notiek backgroundaa, jebkura cita vertiba = redzams logs un darbiiba
+
 
 #manualajiem testiem
 #AdressList =  """Bauskas iela 88
@@ -33,8 +46,8 @@ visibility = 0 # 0 = process notiek backgroundaa, jebkura cita vertiba = redzams
 #chrome_options.add_argument("--incognito")
 #path = r'C:\Darbs\Scripts\chromedriver.exe'
 #browser = webdriver.Chrome(executable_path=path,options=chrome_options)
-path = r'C:\Skripti\webdrivers\chromedriver.exe'
-
+#path = r'C:\Skripti\webdrivers\chromedriver.exe'
+#pieturuSkaits = browser = None
 def WriteOutput():
 	global pieturuSkaits, browser
 	KM2=browser.find_element_by_class_name("pathdata").text.strip().replace('Trip duration:', '').replace('Trip length:', '')
