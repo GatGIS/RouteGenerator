@@ -46,7 +46,7 @@ def RouteBot():
 	if visibility == 0:
 		chrome_options.add_argument("--headless")
 	browser = webdriver.Chrome(executable_path=path,options=chrome_options)
-	browser.get('http://www.optimap.net/')
+	browser.get('https://www.optimap.net/')
 	RandomAdreses = random.sample(AdressArray, StopCount)
 	print(RandomAdreses)
 	#iznjemt sakumpunktu ja randomaa iekriit
